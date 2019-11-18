@@ -21,6 +21,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         app:backgroundTint="#956737"
+        android:src="@drawable/plus"
          />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
