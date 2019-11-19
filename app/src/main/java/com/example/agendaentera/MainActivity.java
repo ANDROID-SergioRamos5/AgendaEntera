@@ -114,8 +114,8 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "tt", Toast.LENGTH_SHORT).show();
                 }else
                 {
-                    int pos = recyclerView.getChildAdapterPosition(view);
-                    Toast.makeText(MainActivity.this,"Editar " + datos.get(pos).getNombre(), Toast.LENGTH_SHORT).show();
+                    Intent intento = new Intent(MainActivity.this, EditContacto.class);
+                    startActivityForResult(intento,2);
                 }
             }
         });
