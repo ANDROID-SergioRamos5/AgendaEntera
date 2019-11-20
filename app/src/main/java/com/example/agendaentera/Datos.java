@@ -1,7 +1,10 @@
 package com.example.agendaentera;
 
 
-public class Datos {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Datos implements Parcelable {
 
     private String nombre;
     private String apellidos;
@@ -18,6 +21,25 @@ public class Datos {
         this.telefono = telefono;
         this.correo = correo;
     }
+
+    protected Datos(Parcel in) {
+        nombre = in.readString();
+        apellidos = in.readString();
+        telefono = in.readString();
+        correo = in.readString();
+    }
+
+    public static final Creator<Datos> CREATOR = new Creator<Datos>() {
+        @Override
+        public Datos createFromParcel(Parcel in) {
+            return new Datos(in);
+        }
+
+        @Override
+        public Datos[] newArray(int size) {
+            return new Datos[size];
+        }
+    };
 
     public String getNombre() {
         return nombre;
@@ -51,4 +73,16 @@ public class Datos {
         this.correo = correo;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(nombre);
+        dest.writeString(apellidos);
+        dest.writeString(telefono);
+        dest.writeString(correo);
+    }
 }

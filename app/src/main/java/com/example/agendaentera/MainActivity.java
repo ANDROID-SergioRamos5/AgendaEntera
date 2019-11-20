@@ -14,6 +14,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Parcelable;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     RecyclerView recyclerView;
     Adaptador adaptador;
-    ArrayList<Datos> datos;
+    public static ArrayList<Datos> datos;
     SwipeDetector swipeDetector;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,8 +115,12 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "tt", Toast.LENGTH_SHORT).show();
                 }else
                 {
+                    final int pos = recyclerView.getChildAdapterPosition(view);
+
                     Intent intento = new Intent(MainActivity.this, EditContacto.class);
-                    startActivityForResult(intento,2);
+                    intento.putExtra("Posicion", pos);
+                    intento.putExtra("Dato", datos.get(pos));
+                    startActivity(intento);
                 }
             }
         });
