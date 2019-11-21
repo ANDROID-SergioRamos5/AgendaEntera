@@ -15,8 +15,9 @@ import java.util.ArrayList;
 public class EditContacto extends AppCompatActivity {
 
     private FloatingActionButton fab;
-    private static Datos datos;
+    private Datos datos;
     EditText nombre, apellido, telefono, correo;
+
 
     @Override
     public void onCreate(Bundle saved) {
@@ -30,7 +31,7 @@ public class EditContacto extends AppCompatActivity {
         correo = findViewById(R.id.email_edit);
 
         datos = getIntent().getExtras().getParcelable("Dato");
-        final int pos = getIntent().getExtras().getInt("Posicion");
+
 
         nombre.setText(datos.getNombre());
         apellido.setText(datos.getApellidos());
@@ -41,10 +42,14 @@ public class EditContacto extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.datos.get(pos).setNombre(nombre.getText().toString());
-                MainActivity.datos.get(pos).setApellidos(apellido.getText().toString());
-                MainActivity.datos.get(pos).setCorreo(correo.getText().toString());
-                MainActivity.datos.get(pos).setTelefono(telefono.getText().toString());
+                datos.setNombre(nombre.getText().toString());
+                datos.setApellidos(apellido.getText().toString());
+                datos.setCorreo(correo.getText().toString());
+                datos.setTelefono(telefono.getText().toString());
+
+                Intent intent = new Intent();
+                intent.putExtra("SALIDA", datos);
+                setResult(RESULT_OK, intent);
                 finish();
             }
         });

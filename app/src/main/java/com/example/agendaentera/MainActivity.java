@@ -9,6 +9,7 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     Adaptador adaptador;
     public static ArrayList<Datos> datos;
     SwipeDetector swipeDetector;
+    private int pos;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         adaptador.setLongListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                final int pos = recyclerView.getChildAdapterPosition(v);
+                pos = recyclerView.getChildAdapterPosition(v);
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setMessage("¿Eliminar contacto " + datos.get(pos).getNombre() + " ?")
                         .setPositiveButton("Si", new DialogInterface.OnClickListener() {
@@ -73,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 if (swipeDetector.swipeDetected())
                 {
                     if (swipeDetector.getAction() == SwipeDetector.Action.LR){
-                        final int pos = recyclerView.getChildAdapterPosition(view);
+                        pos = recyclerView.getChildAdapterPosition(view);
                         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                         builder.setMessage("¿Llamar a " + datos.get(pos).getNombre() + " ?")
                                 .setPositiveButton("Llamar", new DialogInterface.OnClickListener() {
@@ -93,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     else if (swipeDetector.getAction() == SwipeDetector.Action.RL)
                     {
-                        final int pos = recyclerView.getChildAdapterPosition(view);
+                        pos = recyclerView.getChildAdapterPosition(view);
                         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                         builder.setMessage("¿Enviar mensaje a " + datos.get(pos).getNombre() + " ?")
                                 .setPositiveButton("Enviar", new DialogInterface.OnClickListener() {
@@ -115,12 +117,11 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "tt", Toast.LENGTH_SHORT).show();
                 }else
                 {
-                    final int pos = recyclerView.getChildAdapterPosition(view);
+                    pos = recyclerView.getChildAdapterPosition(view);
 
                     Intent intento = new Intent(MainActivity.this, EditContacto.class);
-                    intento.putExtra("Posicion", pos);
                     intento.putExtra("Dato", datos.get(pos));
-                    startActivity(intento);
+                    startActivityForResult(intento,2);
                 }
             }
         });
@@ -139,6 +140,20 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intento,1);
             }
         });
+    }
+
+    public void onActivityResult(int codActividad, int codResultado, @Nullable Intent data) {
+        super.onActivityResult(codActividad, codResultado, data);
+
+        if (codActividad == 2)
+        {
+            if (codResultado == RESULT_OK)
+            {
+                datos.set(pos, (Datos) data.getExtras().getParcelable("SALIDA")) ;
+                recyclerView.setAdapter(adaptador);
+            }
+        }
+
     }
 
     private void añadirDatos()
