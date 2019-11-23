@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -16,11 +17,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Parcelable;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import java.nio.charset.CoderResult;
 import java.util.ArrayList;
 import java.util.zip.Inflater;
 
@@ -67,6 +70,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        adaptador.ClickImagen(new OnClickImagen() {
+            @Override
+            public void onClickImagen(Datos datos, View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+
+                LayoutInflater inflater = MainActivity.this.getLayoutInflater();
+
+                View view = inflater.inflate(R.layout.dialogo_foto,null);
+
+                builder.setView(view);
+                builder.create();
+                builder.show();
+            }
+        });
         swipeDetector = new SwipeDetector();
         adaptador.setTouchListener(swipeDetector);
         adaptador.setClickListener(new View.OnClickListener() {
@@ -81,7 +98,9 @@ public class MainActivity extends AppCompatActivity {
                                 .setPositiveButton("Llamar", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                    Toast.makeText(MainActivity.this, "LLAMAR", Toast.LENGTH_SHORT).show();
+                                        Intent intento = new Intent(Intent.ACTION_VIEW, Uri.parse("tel:"+datos.get(pos).getTelefono()));
+                                        startActivity(intento);
+
                                     }
                                 })
                                 .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -101,7 +120,8 @@ public class MainActivity extends AppCompatActivity {
                                 .setPositiveButton("Enviar", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        Toast.makeText(MainActivity.this, "CORREO", Toast.LENGTH_SHORT).show();
+                                        Intent intento = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto",datos.get(pos).getCorreo(), null));
+                                        startActivity(intento);
                                     }
                                 })
                                 .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -150,6 +170,14 @@ public class MainActivity extends AppCompatActivity {
             if (codResultado == RESULT_OK)
             {
                 datos.set(pos, (Datos) data.getExtras().getParcelable("SALIDA")) ;
+                recyclerView.setAdapter(adaptador);
+            }
+        }
+        if (codActividad == 1)
+        {
+            if (codResultado == RESULT_OK)
+            {
+                datos.add((Datos) data.getExtras().getParcelable("SALIDA"));
                 recyclerView.setAdapter(adaptador);
             }
         }

@@ -8,10 +8,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-public class Holder extends RecyclerView.ViewHolder {
+public class Holder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     TextView nombre, apellidos, correo, telefono;
-
+    OnClickImagen listenerImgane;
+    Datos datos;
+    ImageView imagen;
 
     public Holder(@NonNull View itemView) {
         super(itemView);
@@ -21,6 +23,11 @@ public class Holder extends RecyclerView.ViewHolder {
         apellidos = itemView.findViewById(R.id.Apellido);
         telefono = itemView.findViewById(R.id.Telefono);
         correo = itemView.findViewById(R.id.Correo);
+        imagen = itemView.findViewById(R.id.Imagen);
+
+        imagen.setOnClickListener(this);
+
+
     }
 
     public void bind(Datos datos, int pos) {
@@ -30,7 +37,17 @@ public class Holder extends RecyclerView.ViewHolder {
         telefono.setText(datos.getTelefono());
         correo.setText(datos.getCorreo());
 
+
     }
 
+    public void ClickImagen(OnClickImagen listenerImgane)
+    {
+        if(listenerImgane != null) this.listenerImgane = listenerImgane;
+    }
 
+    @Override
+    public void onClick(View v) {
+        if (listenerImgane != null)
+            listenerImgane.onClickImagen(datos,v);
+    }
 }

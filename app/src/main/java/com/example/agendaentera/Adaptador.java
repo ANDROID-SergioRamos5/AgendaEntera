@@ -17,6 +17,7 @@ public class Adaptador extends RecyclerView.Adapter implements View.OnLongClickL
     View.OnClickListener listener;
     View.OnLongClickListener longListener;
     View.OnTouchListener listenerTouch;
+    OnClickImagen listenerImagen;
 
     public Adaptador(Context context) {
         this.context = context;
@@ -25,11 +26,19 @@ public class Adaptador extends RecyclerView.Adapter implements View.OnLongClickL
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.holder, parent,false);
+        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.holder, parent,false);
         holder = new Holder(view);
         view.setOnLongClickListener(this);
         view.setOnClickListener(this);
         view.setOnTouchListener(this);
+
+        holder.ClickImagen(new OnClickImagen() {
+            @Override
+            public void onClickImagen(Datos datos, View v) {
+                listenerImagen.onClickImagen(datos,view);
+            }
+        });
+
         return holder;
     }
 
@@ -80,5 +89,10 @@ public class Adaptador extends RecyclerView.Adapter implements View.OnLongClickL
         if (listenerTouch != null)
             listenerTouch.onTouch(view, motionEvent);
         return false;
+    }
+
+    public void ClickImagen(OnClickImagen listenerImagen)
+    {
+        if (listenerImagen != null) this.listenerImagen = listenerImagen;
     }
 }
